@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Qr storage</string>
+    <string name="file_storage_info">The uploaded file is stored in our safe storage and can be shared with anyone through the generated QR</string>
+    <string name="recent_scans">Recent Scans</string>
+    <string name="all_scans">All Scans</string>
+    <string name="quick_scan">Quick Scan</string>
+    <string name="enter_tag">Enter tag</string>
+    <string name="qr_text">QR Text</string>
+    <string name="upload_a_file">Upload a file</string>
+    <string name="browse_to_choose_a_file">browse to choose a file</string>
+    <string name="generate_qr">Generate QR</string>
+    <string name="text">Text</string>
+    <string name="file">File</string>
+    <string name="no_recent_scans">No recent scans</string>
+    <string name="file_deletion_info">The file will be erased from storage after 7 days.\n To increase duration buy premium</string>
+</resources>

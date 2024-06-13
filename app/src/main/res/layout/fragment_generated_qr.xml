@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="20dp"
+    android:orientation="vertical"
+    tools:context=".ui.generated_qr.GeneratedQrFragment">
+
+    <ImageView
+        android:id="@+id/qrImageView"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_qr"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/qrTag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_label"
+        android:drawablePadding="12dp"
+        android:text="tag"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+    
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/saveToGalleryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save to Gallery"
+            app:backgroundTint="@color/primary_blue"
+            app:cornerRadius="12dp"
+            android:layout_weight="1"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/shareButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Share"
+            app:strokeColor="@color/primary_blue"
+            app:cornerRadius="12dp"
+            android:layout_marginStart="12dp"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_weight="1"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:strokeColor="#FF8652"
+        android:layout_marginTop="38dp"
+        android:background="#0DFF8652">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_error"
+            android:gravity="center"
+            android:textColor="#FF8652"
+            android:textSize="16sp"
+            android:text="@string/file_deletion_info"
+            android:layout_margin="15dp"
+            app:drawableTint="#FF8652" />
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

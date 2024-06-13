@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.glitchcraftlabs.qrstorage.ui.home.HomeFragment"
+        android:label="QR Storage"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_allScansFragment"
+            app:destination="@id/allScansFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_generatedQrFragment"
+            app:destination="@id/generatedQrFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/generatedQrFragment"
+        android:name="com.glitchcraftlabs.qrstorage.ui.generated_qr.GeneratedQrFragment"
+        android:label="Generated QR"
+        tools:layout="@layout/fragment_generated_qr" />
+    <fragment
+        android:id="@+id/allScansFragment"
+        android:name="com.glitchcraftlabs.qrstorage.ui.history.AllScansFragment"
+        android:label="All Scans"
+        tools:layout="@layout/fragment_all_scans" >
+        <action
+            android:id="@+id/action_allScansFragment_to_generatedQrFragment"
+            app:destination="@id/generatedQrFragment" />
+    </fragment>
+</navigation>
