@@ -2,13 +2,21 @@ package com.glitchcraftlabs.qrstorage.ui.home
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.glitchcraftlabs.qrstorage.MainActivity
 import com.glitchcraftlabs.qrstorage.R
 import com.glitchcraftlabs.qrstorage.databinding.FragmentHomeBinding
 import com.glitchcraftlabs.qrstorage.ui.adapter.ScanHistoryAdapter
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.snackbar.Snackbar
+import com.google.mlkit.vision.barcode.common.Barcode
+import com.google.mlkit.vision.codescanner.GmsBarcodeScanner
+import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
+import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -17,14 +25,35 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val viewModel : HomeViewModel by viewModels()
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    private val options : GmsBarcodeScannerOptions by lazy{
+        GmsBarcodeScannerOptions.Builder()
+            .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
+            .enableAutoZoom()
+            .build()
+    }
+    private lateinit var scanner : GmsBarcodeScanner
+    var qrResult: Barcode? = null
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
 
+        // Initialize the scanner
+        scanner = GmsBarcodeScanning.getClient(requireActivity(),options)
+
         setUpRecyclerView()
         registerListeners()
 
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        qrResult?.let{
+            ScanResultBottomSheetFragment(qrResult!!).show(parentFragmentManager,"ScanResult")
+            qrResult = null
+        }
     }
 
     private fun setUpRecyclerView() {
@@ -69,11 +98,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.allScansButton.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToAllScansFragment())
         }
-
     }
 
     private fun openScanner() {
-        //TODO: Implement scanner
+        scanner.startScan().addOnSuccessListener{
+            qrResult = it
+        }.addOnCanceledListener {
+            Snackbar.make(binding.root, "Scan cancelled", Snackbar.LENGTH_SHORT).show()
+        }.addOnFailureListener {
+            Snackbar.make(binding.root, "Error scanning QR code", Snackbar.LENGTH_SHORT).show()
+        }
     }
 
     override fun onDestroyView() {

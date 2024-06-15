@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeFragment_to_generatedQrFragment"
             app:destination="@id/generatedQrFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_scanResultBottomSheetFragment"
+            app:destination="@id/scanResultBottomSheetFragment" />
     </fragment>
     <fragment
         android:id="@+id/generatedQrFragment"
@@ -31,4 +34,9 @@
             android:id="@+id/action_allScansFragment_to_generatedQrFragment"
             app:destination="@id/generatedQrFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/scanResultBottomSheetFragment"
+        android:name="com.glitchcraftlabs.qrstorage.ui.home.ScanResultBottomSheetFragment"
+        android:label="ScanResultBottomSheetFragment" />
+
 </navigation>
