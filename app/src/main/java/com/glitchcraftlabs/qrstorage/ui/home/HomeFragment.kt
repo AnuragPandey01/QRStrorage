@@ -2,16 +2,14 @@ package com.glitchcraftlabs.qrstorage.ui.home
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.glitchcraftlabs.qrstorage.MainActivity
 import com.glitchcraftlabs.qrstorage.R
 import com.glitchcraftlabs.qrstorage.databinding.FragmentHomeBinding
 import com.glitchcraftlabs.qrstorage.ui.adapter.ScanHistoryAdapter
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.glitchcraftlabs.qrstorage.ui.scan_result.ScanResultBottomSheetFragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanner
@@ -32,7 +30,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             .build()
     }
     private lateinit var scanner : GmsBarcodeScanner
-    var qrResult: Barcode? = null
+    private var qrResult: Barcode? = null
+    private val recentScanAdapter by lazy {
+        ScanHistoryAdapter(listOf(), 5)
+    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,21 +46,45 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         setUpRecyclerView()
         registerListeners()
 
+        viewModel.history.observe(viewLifecycleOwner){
+            if(it.isEmpty()) {
+                binding.recentScansRecyclerView.visibility = View.GONE
+                binding.noScansTextView.visibility = View.VISIBLE
+            }else{
+                binding.recentScansRecyclerView.visibility = View.VISIBLE
+                binding.noScansTextView.visibility = View.GONE
+                recentScanAdapter.updateData(it)
+            }
+        }
 
     }
 
     override fun onResume() {
         super.onResume()
         qrResult?.let{
-            ScanResultBottomSheetFragment(qrResult!!).show(parentFragmentManager,"ScanResult")
-            qrResult = null
+            ScanResultBottomSheetFragment(
+                qrResult!!,
+                onDismiss = {
+                    viewModel.insertScan(qrResult!!)
+                    qrResult = null
+                }
+            ).show(parentFragmentManager,"ScanResult")
         }
     }
 
     private fun setUpRecyclerView() {
         binding.recentScansRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = ScanHistoryAdapter(listOf(), 5) //TODO: Pass the list of
+            adapter = recentScanAdapter
+        }
+
+        recentScanAdapter.setOnItemClick {
+            findNavController().navigate(
+                HomeFragmentDirections.actionHomeFragmentToGeneratedQrFragment(
+                    tag = it.tag,
+                    qrData = it.data
+                )
+            )
         }
     }
 
@@ -85,9 +110,22 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
 
         binding.generateButton.setOnClickListener {
-            //TODO: Implement QR code generation
+            if(binding.radioGroup.checkedRadioButtonId != R.id.textRadioButton){
+                return@setOnClickListener
+            }
+            if(binding.tagInput.text.isNullOrBlank() || binding.qrTextInput.text.isNullOrBlank()){
+                Snackbar.make(binding.root, "Please fill all fields", Snackbar.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            viewModel.insertGeneratedQR(
+                tag = binding.tagInput.text.toString(),
+                value = binding.qrTextInput.text.toString()
+            )
             findNavController().navigate(
-                HomeFragmentDirections.actionHomeFragmentToGeneratedQrFragment()
+                HomeFragmentDirections.actionHomeFragmentToGeneratedQrFragment(
+                    tag = binding.tagInput.text.toString(),
+                    qrData = binding.qrTextInput.text.toString()
+                )
             )
         }
 

@@ -1,9 +1,10 @@
-package com.glitchcraftlabs.qrstorage.ui.home
+package com.glitchcraftlabs.qrstorage.ui.scan_result
 
 import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -12,19 +13,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import com.glitchcraftlabs.qrstorage.databinding.BottomsheetScanReultBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.mlkit.vision.barcode.common.Barcode
 
 
 class ScanResultBottomSheetFragment(
-    private val qrResult: Barcode
+    private val qrResult: Barcode,
+    private val onDismiss: () -> Unit
 ) : BottomSheetDialogFragment() {
 
-
-    private var _binding: BottomsheetScanReultBinding?  = null
+    private var _binding: BottomsheetScanReultBinding? = null
     private val binding: BottomsheetScanReultBinding
         get() = _binding!!
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -103,6 +106,11 @@ class ScanResultBottomSheetFragment(
             // no Activity found to run the given Intent
             Toast.makeText(requireContext(), "No compatible app found", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        onDismiss()
     }
 
     override fun onDestroyView() {

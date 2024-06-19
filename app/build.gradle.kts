@@ -55,6 +55,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     ksp(libs.hilt.android.compiler)
@@ -68,5 +69,6 @@ dependencies {
     implementation(libs.retrofit.gson)
 
     implementation(libs.play.services.code.scanner)
+    implementation("com.google.zxing:core:3.5.3")
 
 }

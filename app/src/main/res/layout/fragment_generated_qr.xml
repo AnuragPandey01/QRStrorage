@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:scaleType="fitCenter"
+        android:layout_marginBottom="20dp"
         android:src="@drawable/ic_qr"/>
 
     <com.google.android.material.textview.MaterialTextView
@@ -52,7 +53,7 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-    <com.google.android.material.card.MaterialCardView
+    <!--<com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:strokeColor="#FF8652"
@@ -68,6 +69,6 @@
             android:text="@string/file_deletion_info"
             android:layout_margin="15dp"
             app:drawableTint="#FF8652" />
-    </com.google.android.material.card.MaterialCardView>
+    </com.google.android.material.card.MaterialCardView>-->
 
 </androidx.appcompat.widget.LinearLayoutCompat>

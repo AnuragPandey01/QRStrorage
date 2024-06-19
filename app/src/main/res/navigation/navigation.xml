@@ -16,15 +16,19 @@
         <action
             android:id="@+id/action_homeFragment_to_generatedQrFragment"
             app:destination="@id/generatedQrFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_scanResultBottomSheetFragment"
-            app:destination="@id/scanResultBottomSheetFragment" />
     </fragment>
     <fragment
         android:id="@+id/generatedQrFragment"
         android:name="com.glitchcraftlabs.qrstorage.ui.generated_qr.GeneratedQrFragment"
         android:label="Generated QR"
-        tools:layout="@layout/fragment_generated_qr" />
+        tools:layout="@layout/fragment_generated_qr" >
+        <argument
+            android:name="qrData"
+            app:argType="string" />
+        <argument
+            android:name="tag"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/allScansFragment"
         android:name="com.glitchcraftlabs.qrstorage.ui.history.AllScansFragment"
@@ -34,9 +38,5 @@
             android:id="@+id/action_allScansFragment_to_generatedQrFragment"
             app:destination="@id/generatedQrFragment" />
     </fragment>
-    <dialog
-        android:id="@+id/scanResultBottomSheetFragment"
-        android:name="com.glitchcraftlabs.qrstorage.ui.home.ScanResultBottomSheetFragment"
-        android:label="ScanResultBottomSheetFragment" />
 
 </navigation>

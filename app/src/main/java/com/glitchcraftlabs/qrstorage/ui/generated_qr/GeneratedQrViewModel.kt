@@ -9,4 +9,5 @@ class GeneratedQrViewModel @Inject constructor(
 
 ) : ViewModel() {
     // TODO: Implement the ViewModel
+
 }
