@@ -40,26 +40,8 @@
                 android:text="date: 12/6/24"
                 android:textSize="12dp"/>
 
-            <TextView
-                android:id="@+id/tv_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="time: 12:56 pm"
-                android:textSize="12dp"/>
 
         </LinearLayout>
-
-        <!--<ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_eye"
-            android:layout_marginStart="18dp"/>
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_share"
-            android:layout_marginStart="18dp"/>-->
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
