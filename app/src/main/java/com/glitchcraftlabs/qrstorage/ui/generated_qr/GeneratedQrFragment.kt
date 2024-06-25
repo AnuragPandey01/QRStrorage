@@ -75,16 +75,20 @@ class GeneratedQrFragment : Fragment(R.layout.fragment_generated_qr) {
         binding.btnEditTag.setOnClickListener {
             val dialogView =
                 LayoutInflater.from(requireContext()).inflate(R.layout.edit_tag_dialog_layout, null)
+            val tagInput = dialogView.findViewById<TextInputEditText>(R.id.tagInput)
+            tagInput.setText(args.tag)
             val dialog =  MaterialAlertDialogBuilder(requireContext())
                 .setView(dialogView)
                 .setTitle("Edit tag")
                 .setPositiveButton("Save") { dialog, _ ->
-                    val newTag = dialogView.findViewById<TextInputEditText>(R.id.tagInput).text.toString()
+                    val newTag = tagInput.text.toString()
                     if (newTag.isNotBlank()) {
                         viewModel.updateHistory(args.tag, newTag)
                         binding.qrTag.text = newTag
+                        dialog.dismiss()
+                    }else{
+                        tagInput.error = "Tag cannot be empty"
                     }
-                    dialog.dismiss()
                 }
                 .setNegativeButton("Cancel") { dialog, _ ->
                     dialog.dismiss()
