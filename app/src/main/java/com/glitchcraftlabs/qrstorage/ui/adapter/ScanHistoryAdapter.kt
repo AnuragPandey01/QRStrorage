@@ -13,11 +13,10 @@ import java.util.Date
 import java.util.Locale
 
 class ScanHistoryAdapter(
-    private var scanHistoryList: List<History>,
-    private val limit: Int = Int.MAX_VALUE
+    private var scanHistoryList: List<History>
 ): RecyclerView.Adapter<ScanHistoryAdapter.ViewHolder>(){
 
-    private val simpleDateTimeFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    private val simpleDateTimeFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
     private var onItemClick : (History) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -25,16 +24,17 @@ class ScanHistoryAdapter(
         return ViewHolder(view)
     }
 
-    override fun getItemCount() = minOf(scanHistoryList.size,limit)
+    override fun getItemCount() = scanHistoryList.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val current = scanHistoryList[position]
         holder.binding.apply {
             tvTag.text = current.tag
             tvHistoryType.text = if(current.isGenerated) "generated" else "scanned"
-            tvDate.text = simpleDateTimeFormatter.format(Date(current.createdAt))
-
-            btnMore.setOnClickListener {
+            val (date , time) = simpleDateTimeFormatter.format(Date(current.createdAt)).split(" ")
+            tvDate.text = date
+            tvTime.text = time
+            root.setOnClickListener {
                onItemClick(current)
             }
         }

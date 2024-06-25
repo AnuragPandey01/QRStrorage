@@ -3,6 +3,7 @@ package com.glitchcraftlabs.qrstorage.data.local
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface HistoryDao {
@@ -10,14 +11,22 @@ interface HistoryDao {
     @Insert
     suspend fun insert(history: History) : Long
 
-    @Query("SELECT * FROM History ORDER BY id DESC")
+    @Query("SELECT * FROM History ORDER BY createdAt DESC")
     suspend fun getAllHistoryNewFirst(): List<History>
 
-    @Query("SELECT * FROM History ORDER BY id ASC")
+    @Query("SELECT * FROM History ORDER BY createdAt ASC")
     suspend fun getAllHistoryOldFirst(): List<History>
 
+    @Query("SELECT * FROM History ORDER BY tag ASC")
+    suspend fun getHistoryOrderByTag(): List<History>
 
-    @Query("SELECT * FROM History WHERE id = :id")
-    suspend fun getHistoryByID(id: Long): History
+    @Query("SELECT * FROM History WHERE tag LIKE '%' || :tag || '%'")
+    suspend fun getHistoryByTag(tag: String): List<History>
+
+    @Query("SELECT * FROM HISTORY ORDER BY createdAt DESC LIMIT :limit")
+    suspend fun getRecentWithLimit(limit: Int): List<History>
+
+    @Query("UPDATE History SET tag = :newTag WHERE tag = :oldTag")
+    suspend fun updateTag(newTag : String, oldTag:String)
 
 }

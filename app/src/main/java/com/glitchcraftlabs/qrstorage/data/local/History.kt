@@ -3,11 +3,9 @@ package com.glitchcraftlabs.qrstorage.data.local
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity()
 data class History(
-    @PrimaryKey(autoGenerate = true)
-    val id:Long? = null,
-
+    @PrimaryKey
     val tag: String,
 
     val createdAt: Long,
