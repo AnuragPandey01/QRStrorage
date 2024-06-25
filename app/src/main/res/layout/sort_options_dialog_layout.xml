@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <RadioGroup
+        android:id="@+id/radio_group_sort_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/radio_recently_added"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Recently added"/>
+
+        <RadioButton
+            android:id="@+id/radio_oldest_first"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Oldest first"/>
+
+        <RadioButton
+            android:id="@+id/radio_tag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tag"/>
+
+    </RadioGroup>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

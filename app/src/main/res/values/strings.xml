@@ -13,9 +13,4 @@
     <string name="file">File</string>
     <string name="no_recent_scans">No recent scans</string>
     <string name="file_deletion_info">The file will be erased from storage after 7 days.\n To increase duration buy premium</string>
-    <string-array name="sort_options">
-        <item>Recently added</item>
-        <item>Oldest first</item>
-        <item>Tag</item>
-    </string-array>
 </resources>

@@ -2,6 +2,7 @@ package com.glitchcraftlabs.qrstorage.ui.history
 
 import androidx.fragment.app.viewModels
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
@@ -19,6 +21,7 @@ import com.glitchcraftlabs.qrstorage.R
 import com.glitchcraftlabs.qrstorage.databinding.FragmentAllScansBinding
 import com.glitchcraftlabs.qrstorage.ui.adapter.ScanHistoryAdapter
 import com.glitchcraftlabs.qrstorage.util.QueryResult
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,7 +39,6 @@ class AllScansFragment : Fragment(R.layout.fragment_all_scans), AdapterView.OnIt
         _binding = FragmentAllScansBinding.bind(view)
 
         initialiseRecyclerView()
-        initialiseSortSpinner()
 
         viewModel.history.observe(viewLifecycleOwner){
             when(it){
@@ -88,6 +90,29 @@ class AllScansFragment : Fragment(R.layout.fragment_all_scans), AdapterView.OnIt
                     }
 
                 })
+
+                val sortButton = menu.findItem(R.id.menu_sort)
+                sortButton.setOnMenuItemClickListener {
+                    val dialogView =
+                        LayoutInflater.from(requireContext()).inflate(R.layout.sort_options_dialog_layout, null)
+                    val dialog =  MaterialAlertDialogBuilder(requireContext())
+                        .setView(dialogView)
+                        .setTitle("Sort By")
+                        .create()
+
+                    val sortOptions = dialogView.findViewById<RadioGroup>(R.id.radio_group_sort_options)
+                    sortOptions.check(viewModel.checkedRadioButtonId)
+                    sortOptions.setOnCheckedChangeListener { _, checkedId ->
+                        when(checkedId){
+                            R.id.radio_recently_added -> viewModel.sortByNew()
+                            R.id.radio_oldest_first -> viewModel.sortByOld()
+                            R.id.radio_tag -> viewModel.sortByTag()
+                        }
+                        dialog.dismiss()
+                    }
+                    dialog.show()
+                    true
+                }
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -95,19 +120,6 @@ class AllScansFragment : Fragment(R.layout.fragment_all_scans), AdapterView.OnIt
             }
 
         },viewLifecycleOwner)
-    }
-
-    private fun initialiseSortSpinner() {
-        ArrayAdapter.createFromResource(
-            requireContext(),
-            R.array.sort_options,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.sortSpinner.adapter = adapter
-            binding.sortSpinner.setSelection(0)
-        }
-        binding.sortSpinner.onItemSelectedListener = this
     }
 
     private fun initialiseRecyclerView() {
