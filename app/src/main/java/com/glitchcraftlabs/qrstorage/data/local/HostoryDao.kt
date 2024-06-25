@@ -3,13 +3,12 @@ package com.glitchcraftlabs.qrstorage.data.local
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Update
 
 @Dao
 interface HistoryDao {
 
     @Insert
-    suspend fun insert(history: History) : Long
+    suspend fun insert(history: History)
 
     @Query("SELECT * FROM History ORDER BY createdAt DESC")
     suspend fun getAllHistoryNewFirst(): List<History>

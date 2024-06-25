@@ -28,7 +28,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    suspend fun insertGeneratedQR(tag: String, value: String): LiveData<QueryResult<Long>> {
+    suspend fun insertGeneratedQR(tag: String, value: String): LiveData<QueryResult<Nothing?>> {
         val res = repository.insertHistory(
             tag = tag,
             value = value,

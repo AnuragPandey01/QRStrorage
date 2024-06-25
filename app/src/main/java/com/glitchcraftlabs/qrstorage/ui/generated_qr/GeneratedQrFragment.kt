@@ -20,17 +20,24 @@ import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.glitchcraftlabs.qrstorage.R
 import com.glitchcraftlabs.qrstorage.databinding.FragmentGeneratedQrBinding
 import com.glitchcraftlabs.qrstorage.util.QRGenerator
+import com.glitchcraftlabs.qrstorage.util.QueryResult
 import com.glitchcraftlabs.qrstorage.util.saveImage
 import com.google.android.datatransport.BuildConfig
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.dialog.MaterialDialogs
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 
@@ -76,24 +83,33 @@ class GeneratedQrFragment : Fragment(R.layout.fragment_generated_qr) {
             val dialogView =
                 LayoutInflater.from(requireContext()).inflate(R.layout.edit_tag_dialog_layout, null)
             val tagInput = dialogView.findViewById<TextInputEditText>(R.id.tagInput)
-            tagInput.setText(args.tag)
+            tagInput.setText(binding.qrTag.text)
+
             val dialog =  MaterialAlertDialogBuilder(requireContext())
                 .setView(dialogView)
                 .setTitle("Edit tag")
-                .setPositiveButton("Save") { dialog, _ ->
-                    val newTag = tagInput.text.toString()
-                    if (newTag.isNotBlank()) {
-                        viewModel.updateHistory(args.tag, newTag)
-                        binding.qrTag.text = newTag
-                        dialog.dismiss()
-                    }else{
-                        tagInput.error = "Tag cannot be empty"
-                    }
-                }
-                .setNegativeButton("Cancel") { dialog, _ ->
-                    dialog.dismiss()
-                }
                 .create()
+
+            dialogView.findViewById<MaterialButton>(R.id.cancel_edit_button).setOnClickListener {
+                dialog.dismiss()
+            }
+            dialogView.findViewById<MaterialButton>(R.id.save_edit_button).setOnClickListener {
+                val newTag = tagInput.text.toString()
+                if (newTag.isNotBlank()) {
+                    lifecycleScope.launch {
+                        viewModel.updateHistory(binding.qrTag.text.toString(), newTag).observe(viewLifecycleOwner){
+                            if(it is QueryResult.Error){
+                                tagInput.error = it.message
+                            }else if(it is QueryResult.Success){
+                                binding.qrTag.text = newTag
+                                dialog.dismiss()
+                            }
+                        }
+                    }
+                }else{
+                    tagInput.error = "Tag cannot be empty"
+                }
+            }
             dialog.show()
         }
     }

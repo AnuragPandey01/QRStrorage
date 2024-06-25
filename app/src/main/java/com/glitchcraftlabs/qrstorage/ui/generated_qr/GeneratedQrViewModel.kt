@@ -14,13 +14,11 @@ class GeneratedQrViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    fun updateHistory(oldTag: String, newTag:String) {
-        viewModelScope.launch {
-            repository.updateTag(
-                oldTag = oldTag,
-                newTag = newTag
-            )
-        }
-    }
+    suspend fun updateHistory(oldTag: String, newTag:String) =
+        repository.updateTag(
+            oldTag = oldTag,
+            newTag = newTag
+        )
+
 
 }

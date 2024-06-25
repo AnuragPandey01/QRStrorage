@@ -22,8 +22,8 @@ class Repository(
         tag: String,
         value : String,
         isGenerated: Boolean
-    ): LiveData<QueryResult<Long>>  {
-        val insertLiveData = MutableLiveData<QueryResult<Long>>(QueryResult.Loading())
+    ): LiveData<QueryResult<Nothing?>>  {
+        val insertLiveData = MutableLiveData<QueryResult<Nothing?>>(QueryResult.Loading())
         try{
             historyDao.insert(
                 History(
@@ -33,7 +33,7 @@ class Repository(
                     createdAt = System.currentTimeMillis()
                 )
             ).also {
-                insertLiveData.postValue(QueryResult.Success(it))
+                insertLiveData.postValue(QueryResult.Success(null))
             }
         }catch (e: SQLiteConstraintException){
             insertLiveData.postValue(QueryResult.Error("QR with same tag already exist"))
@@ -86,11 +86,14 @@ class Repository(
     suspend fun updateTag(
         newTag: String,
         oldTag: String
-    ){
+    ): LiveData<QueryResult<Nothing?>>{
+        val liveData = MutableLiveData<QueryResult<Nothing?>>(QueryResult.Loading())
         try{
             historyDao.updateTag(newTag, oldTag)
-        }catch (_: Exception){
-
+            liveData.postValue(QueryResult.Success(null))
+        }catch (e: SQLiteConstraintException){
+            liveData.postValue(QueryResult.Error("QR with same tag already exist"))
         }
+        return liveData
     }
 }
