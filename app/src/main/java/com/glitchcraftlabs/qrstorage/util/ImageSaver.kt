@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import com.glitchcraftlabs.qrstorage.util.Constants.IMAGE_QUALITY
 import java.io.File
 import java.io.IOException
 import java.io.OutputStream
@@ -40,7 +41,7 @@ fun ContentResolver.saveImage(
         outputStream = this.openOutputStream(uri)
             ?: throw IOException("Failed to create output stream")
 
-        if (!bitmap.compress(Bitmap.CompressFormat.PNG, 95, outputStream)) {
+        if (!bitmap.compress(Bitmap.CompressFormat.PNG, IMAGE_QUALITY, outputStream)) {
             throw IOException("Failed to save bitmap.")
         }
         onSuccess(uri)

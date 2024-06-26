@@ -13,7 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.viewModels
+import com.glitchcraftlabs.qrstorage.R
 import com.glitchcraftlabs.qrstorage.databinding.BottomsheetScanReultBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -48,7 +48,8 @@ class ScanResultBottomSheetFragment(
             // Copy the text to clipboard
             val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipboard.setPrimaryClip(ClipData.newPlainText("Scan Result", scanResult))
-            Toast.makeText(requireContext(), "Text copied to clipboard", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(),
+                getString(R.string.text_copied_to_clipboard), Toast.LENGTH_SHORT).show()
         }
 
         when(qrResult.valueType){
@@ -95,7 +96,7 @@ class ScanResultBottomSheetFragment(
                 putExtra(Intent.EXTRA_TEXT, scanResult)
                 type = "text/plain"
             }
-            startIntent(Intent.createChooser(sendIntent, "Share via"))
+            startIntent(Intent.createChooser(sendIntent, getString(R.string.share_via)))
         }
     }
 
@@ -104,7 +105,8 @@ class ScanResultBottomSheetFragment(
             startActivity(intent)
         } catch (ignored: ActivityNotFoundException) {
             // no Activity found to run the given Intent
-            Toast.makeText(requireContext(), "No compatible app found", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(),
+                getString(R.string.no_compatible_app_found), Toast.LENGTH_SHORT).show()
         }
     }
 

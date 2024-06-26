@@ -3,8 +3,6 @@ package com.glitchcraftlabs.qrstorage.ui.generated_qr
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -14,32 +12,23 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
 import com.glitchcraftlabs.qrstorage.R
 import com.glitchcraftlabs.qrstorage.databinding.FragmentGeneratedQrBinding
+import com.glitchcraftlabs.qrstorage.util.Constants.QR_SIZE
 import com.glitchcraftlabs.qrstorage.util.QRGenerator
 import com.glitchcraftlabs.qrstorage.util.QueryResult
 import com.glitchcraftlabs.qrstorage.util.saveImage
-import com.google.android.datatransport.BuildConfig
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.dialog.MaterialDialogs
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileOutputStream
 
 @AndroidEntryPoint
 class GeneratedQrFragment : Fragment(R.layout.fragment_generated_qr) {
@@ -49,20 +38,14 @@ class GeneratedQrFragment : Fragment(R.layout.fragment_generated_qr) {
     private val binding: FragmentGeneratedQrBinding get() = _binding!!
     private val args by navArgs<GeneratedQrFragmentArgs>()
 
-
-    companion object {
-        const val QR_WIDTH = 250
-        const val QR_HEIGHT = 250
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentGeneratedQrBinding.bind(view)
         binding.qrImageView.setImageBitmap(
             QRGenerator.generateQRCodeBitmap(
                 args.qrData,
-                QR_WIDTH,
-                QR_HEIGHT
+                QR_SIZE,
+                QR_SIZE
             )
         )
         binding.qrTag.text = args.tag
@@ -87,7 +70,7 @@ class GeneratedQrFragment : Fragment(R.layout.fragment_generated_qr) {
 
             val dialog =  MaterialAlertDialogBuilder(requireContext())
                 .setView(dialogView)
-                .setTitle("Edit tag")
+                .setTitle(getString(R.string.edit_tag))
                 .create()
 
             dialogView.findViewById<MaterialButton>(R.id.cancel_edit_button).setOnClickListener {
@@ -107,7 +90,7 @@ class GeneratedQrFragment : Fragment(R.layout.fragment_generated_qr) {
                         }
                     }
                 }else{
-                    tagInput.error = "Tag cannot be empty"
+                    tagInput.error = getString(R.string.tag_cannot_be_empty)
                 }
             }
             dialog.show()
@@ -133,13 +116,15 @@ class GeneratedQrFragment : Fragment(R.layout.fragment_generated_qr) {
                         type = "image/*"
                         putExtra(Intent.EXTRA_STREAM, it)
                     }
-                    startActivity(Intent.createChooser(intent, "Share QR code"))
+                    startActivity(Intent.createChooser(intent, getString(R.string.share_qr_code)))
                 }
-                Toast.makeText(requireContext(), "QR image saved to gallery", Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(),
+                    getString(R.string.qr_image_saved_to_gallery), Toast.LENGTH_SHORT)
                     .show()
             },
             onFailure = {
-                Toast.makeText(requireContext(), "Failed to save image", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),
+                    getString(R.string.failed_to_save_image), Toast.LENGTH_SHORT).show()
             }
         )
     }
@@ -166,7 +151,7 @@ class GeneratedQrFragment : Fragment(R.layout.fragment_generated_qr) {
                 }
                 Toast.makeText(
                     requireContext(),
-                    "permission is required to save",
+                    getString(R.string.permission_is_required_to_save),
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -184,7 +169,7 @@ class GeneratedQrFragment : Fragment(R.layout.fragment_generated_qr) {
             } else {
                 Toast.makeText(
                     requireContext(),
-                    "permission is required to save",
+                    getString(R.string.permission_is_required_to_save),
                     Toast.LENGTH_SHORT
                 ).show()
             }

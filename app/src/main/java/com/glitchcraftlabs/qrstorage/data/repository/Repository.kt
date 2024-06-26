@@ -15,9 +15,6 @@ class Repository(
     private val _history = MutableLiveData<QueryResult<List<History>>>(QueryResult.Loading())
     val history: LiveData<QueryResult<List<History>>> = _history
 
-    private val _insertStatus = MutableLiveData<QueryResult<Long>>(QueryResult.Loading())
-    val insertStatus: LiveData<QueryResult<Long>> = _insertStatus
-
     suspend fun insertHistory(
         tag: String,
         value : String,

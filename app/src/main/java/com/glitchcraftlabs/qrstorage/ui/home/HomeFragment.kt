@@ -137,7 +137,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 return@setOnClickListener
             }
             if(binding.tagInput.text.isNullOrBlank() || binding.qrTextInput.text.isNullOrBlank()){
-                Snackbar.make(binding.root, "Please fill all fields", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(binding.root,
+                    getString(R.string.please_fill_all_fields), Snackbar.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             lifecycleScope.launch {
@@ -176,9 +177,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         scanner.startScan().addOnSuccessListener{
             qrResult = it
         }.addOnCanceledListener {
-            Snackbar.make(binding.root, "Scan cancelled", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, getString(R.string.scan_cancelled), Snackbar.LENGTH_SHORT).show()
         }.addOnFailureListener {
-            Snackbar.make(binding.root, "Error scanning QR code", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.root,
+                getString(R.string.error_scanning_qr_code), Snackbar.LENGTH_SHORT).show()
         }
     }
 

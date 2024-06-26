@@ -70,5 +70,6 @@ dependencies {
 
     implementation(libs.play.services.code.scanner)
     implementation("com.google.zxing:core:3.5.3")
+    implementation(libs.audience.network.sdk)
 
 }
