@@ -1,4 +1,4 @@
-package com.glitchcraftlabs.qrstorage.ui.auth.signup
+package com.glitchcraftlabs.qrstorage.ui.auth
 
 import android.app.ProgressDialog
 import android.content.Intent
@@ -21,11 +21,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SignupFragment : Fragment(R.layout.fragment_signup) {
+class AuthFragment : Fragment(R.layout.fragment_signup) {
 
     private var _binding: FragmentSignupBinding? = null
     private val binding get() = _binding!!
-    private val viewmodel by viewModels<SignupViewModel>()
+    private val viewmodel by viewModels<AuthViewModel>()
     private val progressDialog by lazy { ProgressDialog(requireContext()).apply { setTitle("Loading..") } }
     private lateinit var googleSignInClient : GoogleSignInClient
     private val RC_SIGN_IN = 123
