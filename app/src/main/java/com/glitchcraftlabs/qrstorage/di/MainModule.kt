@@ -7,6 +7,9 @@ import com.glitchcraftlabs.qrstorage.data.local.HistoryDatabase
 import com.glitchcraftlabs.qrstorage.data.repository.AuthRepository
 import com.glitchcraftlabs.qrstorage.data.repository.Repository
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,8 +31,8 @@ class MainModule {
 
     @Singleton
     @Provides
-    fun provideRepository(historyDao: HistoryDao): Repository {
-        return Repository(historyDao)
+    fun provideRepository(historyDao: HistoryDao, firebaseStorage: FirebaseStorage): Repository {
+        return Repository(historyDao, firebaseStorage)
     }
 
     @Provides
@@ -42,4 +45,6 @@ class MainModule {
     fun provideAuthRepository(firebaseAuth: FirebaseAuth): AuthRepository {
         return AuthRepository(firebaseAuth)
     }
+
+    @Provides fun provideStorage() = Firebase.storage
 }

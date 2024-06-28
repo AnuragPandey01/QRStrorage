@@ -1,5 +1,6 @@
 package com.glitchcraftlabs.qrstorage.ui.home
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,6 +20,9 @@ class HomeViewModel @Inject constructor(
 ): ViewModel() {
 
     val history = repository.history
+    private var _selectedFileUri : Uri? = null
+    val selectedFileUri: Uri?
+        get() = _selectedFileUri
 
     init{
         loadHistory()
@@ -54,5 +58,15 @@ class HomeViewModel @Inject constructor(
     fun logout() {
         authRepository.logout()
     }
+
+    fun setSelectedFileUri(uri: Uri){
+        _selectedFileUri = uri
+    }
+
+    fun clearSelectedFileUri(){
+        _selectedFileUri = null
+    }
+
+    suspend fun uploadFile(tag:String, fileUri: Uri) = repository.uploadFile(tag, fileUri,authRepository.getCurrentUser()!!)
 
 }

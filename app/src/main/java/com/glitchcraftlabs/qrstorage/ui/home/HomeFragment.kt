@@ -1,11 +1,13 @@
 package com.glitchcraftlabs.qrstorage.ui.home
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -18,7 +20,9 @@ import com.glitchcraftlabs.qrstorage.R
 import com.glitchcraftlabs.qrstorage.databinding.FragmentHomeBinding
 import com.glitchcraftlabs.qrstorage.ui.adapter.ScanHistoryAdapter
 import com.glitchcraftlabs.qrstorage.ui.scan_result.ScanResultBottomSheetFragment
+import com.glitchcraftlabs.qrstorage.util.Constants.FILE_SIZE_LIMIT
 import com.glitchcraftlabs.qrstorage.util.QueryResult
+import com.glitchcraftlabs.qrstorage.util.getFileMetaInfo
 import com.google.android.material.snackbar.Snackbar
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanner
@@ -26,7 +30,6 @@ import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.util.UUID
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -44,6 +47,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private var qrResult: Barcode? = null
     private val recentScanAdapter by lazy {
         ScanHistoryAdapter(listOf())
+    }
+    private val progressDialog by lazy {
+        ProgressDialog(requireContext()).apply {
+            setTitle("Uploading file")
+        }
     }
 
 
@@ -133,6 +141,24 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun registerListeners() {
 
+        val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            uri?.let {
+                val (fileSize, fileName) = requireContext().getFileMetaInfo(it)
+                if (fileSize > FILE_SIZE_LIMIT) {
+                    Snackbar.make(
+                        binding.root,
+                        "file should be below ${FILE_SIZE_LIMIT / (1024 * 1024L)} mb",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                    return@let
+                }
+                binding.uploadedFileButton.visibility = View.VISIBLE
+                binding.uploadFileButton.visibility = View.GONE
+                binding.fileName.text = fileName
+                viewModel.setSelectedFileUri(it)
+            }
+        }
+
         binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId) {
                 R.id.textRadioButton -> {
@@ -148,40 +174,43 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
 
-        binding.uploadFileButton.setOnClickListener {
-            //TODO: Implement file upload
-        }
-
         binding.generateButton.setOnClickListener {
-            if(binding.radioGroup.checkedRadioButtonId != R.id.textRadioButton){
-                return@setOnClickListener
-            }
-            if(binding.tagInput.text.isNullOrBlank() || binding.qrTextInput.text.isNullOrBlank()){
-                Snackbar.make(binding.root,
-                    getString(R.string.please_fill_all_fields), Snackbar.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            lifecycleScope.launch {
-                viewModel.insertGeneratedQR(
-                    tag = binding.tagInput.text.toString(),
-                    value = binding.qrTextInput.text.toString()
-                ).observe(viewLifecycleOwner){
-                    if(it is QueryResult.Error){
-                        binding.tagInput.error = it.message
-                    }
+            val tag = binding.tagInput.text.toString()
 
-                    if(it is QueryResult.Success){
-                        findNavController().navigate(
-                            HomeFragmentDirections.actionHomeFragmentToGeneratedQrFragment(
-                                tag = binding.tagInput.text.toString(),
-                                qrData = binding.qrTextInput.text.toString()
-                            )
-                        )
-                        binding.tagInput.text?.clear()
-                        binding.qrTextInput.text?.clear()
+            if(binding.radioGroup.checkedRadioButtonId == R.id.fileRadioButton){
+                if(tag.isBlank() || viewModel.selectedFileUri.isNull()){
+                    Snackbar.make(binding.root,
+                        getString(R.string.please_fill_all_fields), Snackbar.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                viewModel.viewModelScope.launch {
+                    viewModel.uploadFile(tag, viewModel.selectedFileUri!!).observe(viewLifecycleOwner){
+                        when(it){
+                            is QueryResult.Loading -> {
+                                progressDialog.show()
+                            }
+                            is QueryResult.Success -> {
+                                progressDialog.dismiss()
+                                insertHistory(tag, it.data.toString())
+                            }
+                            is QueryResult.Error -> {
+                                progressDialog.dismiss()
+                                Snackbar.make(binding.root, it.message ?: "something went wrong", Snackbar.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
                     }
                 }
+            }else{
+                if(binding.tagInput.text.isNullOrBlank() || binding.qrTextInput.text.isNullOrBlank()){
+                    Snackbar.make(binding.root,
+                        getString(R.string.please_fill_all_fields), Snackbar.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                insertHistory(tag, binding.qrTextInput.text.toString())
             }
+
         }
 
         binding.quickScanButton.setOnClickListener {
@@ -190,6 +219,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         binding.allScansButton.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToAllScansFragment())
+        }
+
+        binding.uploadFileButton.setOnClickListener {
+            getContent.launch("*/*")
+        }
+
+        binding.clearFile.setOnClickListener {
+            viewModel.clearSelectedFileUri()
+            binding.uploadedFileButton.visibility = View.GONE
+            binding.uploadFileButton.visibility = View.VISIBLE
         }
     }
 
@@ -204,8 +243,34 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
+    private fun insertHistory(tag:String, value: String){
+        lifecycleScope.launch {
+            viewModel.insertGeneratedQR(
+                tag = tag,
+                value = value
+            ).observe(viewLifecycleOwner){
+                if(it is QueryResult.Error){
+                    binding.tagInput.error = it.message
+                }
+
+                if(it is QueryResult.Success){
+                    findNavController().navigate(
+                        HomeFragmentDirections.actionHomeFragmentToGeneratedQrFragment(
+                            tag = tag,
+                            qrData = value
+                        )
+                    )
+                    binding.tagInput.text?.clear()
+                    binding.qrTextInput.text?.clear()
+                }
+            }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
+
+fun Any?.isNull() = this == null

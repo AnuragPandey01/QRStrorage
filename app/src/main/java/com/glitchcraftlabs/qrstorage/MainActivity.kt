@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var navController: NavController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -54,47 +55,6 @@ class MainActivity : AppCompatActivity() {
         val currentUser = firebaseAuth.currentUser
 
     }
-
-    /*private val signInLauncher = registerForActivityResult(
-        FirebaseAuthUIActivityResultContract(),
-    ) { res ->
-        val response = res.idpResponse
-        if(res.resultCode == RESULT_OK){
-            val user = FirebaseAuth.getInstance().currentUser
-        }else{
-            finish()
-        }
-    }*/
-
-
-    /*private val authStateChangeListener =
-        FirebaseAuth.AuthStateListener { firebaseAuth ->
-            val user = firebaseAuth.currentUser
-            if (user == null) {
-                val providers = arrayListOf(
-                    AuthUI.IdpConfig.EmailBuilder().build(),
-                    AuthUI.IdpConfig.GoogleBuilder().build(),
-                )
-
-                val signInIntent = AuthUI.getInstance()
-                    .createSignInIntentBuilder()
-                    .setAvailableProviders(providers)
-                    .setLogo(R.drawable.ic_qr_scan)
-                    .setTheme(R.style.Theme_QrStorage)
-                    .build()
-                signInLauncher.launch(signInIntent)
-            }
-        }
-
-    override fun onResume() {
-        super.onResume()
-        firebaseAuth.addAuthStateListener(authStateChangeListener)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        firebaseAuth.removeAuthStateListener(authStateChangeListener)
-    }*/
 
 
 }

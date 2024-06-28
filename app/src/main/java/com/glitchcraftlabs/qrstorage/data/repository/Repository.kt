@@ -1,16 +1,25 @@
 package com.glitchcraftlabs.qrstorage.data.repository
 
 import android.database.sqlite.SQLiteConstraintException
+import android.net.Uri
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.glitchcraftlabs.qrstorage.data.local.History
 import com.glitchcraftlabs.qrstorage.data.local.HistoryDao
 import com.glitchcraftlabs.qrstorage.util.QueryResult
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.tasks.await
 
 
 class Repository(
-    private val historyDao: HistoryDao
+    private val historyDao: HistoryDao,
+    private val firebaseStorage: FirebaseStorage
 ) {
+
+    private val storageRef = firebaseStorage.reference
 
     private val _history = MutableLiveData<QueryResult<List<History>>>(QueryResult.Loading())
     val history: LiveData<QueryResult<List<History>>> = _history
@@ -90,6 +99,24 @@ class Repository(
             liveData.postValue(QueryResult.Success(null))
         }catch (e: SQLiteConstraintException){
             liveData.postValue(QueryResult.Error("QR with same tag already exist"))
+        }
+        return liveData
+    }
+
+    suspend fun uploadFile(
+        tag:String,
+        fileUri: Uri,
+        user: FirebaseUser
+    ): LiveData<QueryResult<Uri>>{
+        val liveData = MutableLiveData<QueryResult<Uri>>(QueryResult.Loading())
+        try{
+            val userStorageRef = storageRef.child(user.uid)
+            val fileRef = userStorageRef.child(tag)
+            fileRef.putFile(fileUri).await()
+            val downloadUrl = fileRef.downloadUrl.await()
+            liveData.postValue(QueryResult.Success(downloadUrl))
+        }catch (e: Exception){
+            liveData.postValue(QueryResult.Error("Error inserting data"))
         }
         return liveData
     }
