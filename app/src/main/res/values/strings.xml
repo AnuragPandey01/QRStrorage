@@ -30,4 +30,5 @@
     <string name="by_signing_up_you_agree_to_our_terms_privacy_policy"><![CDATA[by signing up you agree to our Terms & Privacy Policy]]></string>
     <string name="please_accept_terms">please accept terms and conditions\n</string>
     <string name="web_client">1028817467707-dj5hgj72lbc7cpliski6v5fob78h7079.apps.googleusercontent.com</string>
+    <string name="password_mismatch">password and confirm password must be same</string>
 </resources>

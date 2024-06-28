@@ -31,27 +31,54 @@
             android:textStyle="bold"
             android:textColor="@color/primary_blue"/>
 
-        <TextView
+        <!--<TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sign Up"
             android:textStyle="bold"
             android:layout_marginBottom="30dp"
             android:layout_marginTop="40dp"
-            android:textSize="20sp"/>
+            android:textSize="20sp"/>-->
 
-        <!--<com.google.android.material.textfield.TextInputLayout
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Name"
-            android:id="@+id/nameLayout"
-            android:layout_marginBottom="15dp">
-            <com.google.android.material.textfield.TextInputEditText
+            app:cardElevation="0dp"
+            app:cardCornerRadius="8dp"
+            android:layout_marginTop="40dp"
+            app:strokeColor="@color/primary_blue"
+            app:strokeWidth="1dp"
+            android:layout_marginBottom="20dp">
+            <RadioGroup
+                android:id="@+id/radioGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"/>
-
-        </com.google.android.material.textfield.TextInputLayout>-->
+                android:orientation="horizontal">
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/signupRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@android:color/transparent"
+                    android:background="@drawable/radio_selector"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:textColor="@drawable/text_color_selector"
+                    android:textSize="18sp"
+                    android:layout_weight="1"
+                    android:text="Signup"/>
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/loginRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@android:color/transparent"
+                    android:background="@drawable/radio_selector"
+                    android:textColor="@drawable/text_color_selector"
+                    android:textSize="18sp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Login"/>
+            </RadioGroup>
+        </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -69,8 +96,22 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Create Password"
+            android:hint="Password"
             android:id="@+id/passwordLayout"
+            app:endIconMode="password_toggle"
+            android:layout_marginBottom="15dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Confirm Password"
+            android:id="@+id/confirmPasswordLayout"
             app:endIconMode="password_toggle"
             android:layout_marginBottom="15dp">
             <com.google.android.material.textfield.TextInputEditText
@@ -102,6 +143,23 @@
                 android:textColor="@color/white"
                 android:layout_margin="16dp"
                 android:text="Sign up"/>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/loginButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:backgroundTint="@color/primary_blue"
+            app:strokeColor="@color/primary_blue">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:layout_margin="16dp"
+                android:text="Login"/>
         </com.google.android.material.card.MaterialCardView>
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -146,13 +204,13 @@
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
                     android:layout_marginStart="16dp"
-                    android:text="Sign Up with Google"/>
+                    android:text="continue with Google"/>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
         </com.google.android.material.card.MaterialCardView>
 
 
-        <View
+        <!--<View
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
@@ -177,7 +235,7 @@
                 android:textColor="@color/primary_blue"
                 android:layout_margin="16dp"
                 android:text="Login"/>
-        </com.google.android.material.card.MaterialCardView>
+        </com.google.android.material.card.MaterialCardView>-->
 
     </LinearLayout>
 

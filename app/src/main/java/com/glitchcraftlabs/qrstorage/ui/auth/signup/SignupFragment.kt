@@ -30,7 +30,7 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
     private lateinit var googleSignInClient : GoogleSignInClient
     private val RC_SIGN_IN = 123
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle   ?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSignupBinding.bind(view)
 
@@ -47,26 +47,53 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
         binding.signupButton.setOnClickListener {
             val email = binding.emailLayout.editText?.text.toString()
             val password = binding.passwordLayout.editText?.text.toString()
+            val confirmPassword = binding.confirmPasswordLayout.editText?.text.toString()
 
-            if (email.isNotBlank() && password.isNotBlank()) {
+            if (email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
+                Snackbar.make(requireView(), getString(R.string.please_fill_all_fields), Snackbar.LENGTH_SHORT).show()
+            }else if(password != confirmPassword){
+                Snackbar.make(requireView(), getString(R.string.password_mismatch), Snackbar.LENGTH_SHORT).show()
+            }else if(!binding.checkboxTerms.isChecked){
+                Snackbar.make(requireView(), getString(R.string.please_accept_terms), Snackbar.LENGTH_SHORT).show()
+            }else{
                 viewmodel.viewModelScope.launch {
                     observeAuthState(viewmodel.signUp(email, password))
                 }
-            } else if(!binding.checkboxTerms.isChecked){
-                Snackbar.make(requireView(), getString(R.string.please_accept_terms), Snackbar.LENGTH_SHORT).show()
-            }else{
-                Snackbar.make(requireView(), getString(R.string.please_fill_all_fields), Snackbar.LENGTH_SHORT).show()
             }
         }
 
         binding.googleButton.setOnClickListener {
             val intent = googleSignInClient.signInIntent
             startActivityForResult(intent, RC_SIGN_IN)
-
         }
 
         binding.loginButton.setOnClickListener {
-            // Navigate to Login Fragment
+            val email = binding.emailLayout.editText?.text.toString()
+            val password = binding.passwordLayout.editText?.text.toString()
+            if (email.isBlank() || password.isBlank()) {
+                Snackbar.make(requireView(), getString(R.string.please_fill_all_fields), Snackbar.LENGTH_SHORT).show()
+            }else{
+                viewmodel.viewModelScope.launch {
+                    observeAuthState(viewmodel.login(email, password))
+                }
+            }
+        }
+
+        binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
+            when(checkedId){
+                R.id.signupRadioButton -> {
+                    binding.confirmPasswordLayout.visibility = View.VISIBLE
+                    binding.signupButton.visibility = View.VISIBLE
+                    binding.loginButton.visibility = View.GONE
+                    binding.checkboxTerms.visibility = View.VISIBLE
+                }
+                R.id.loginRadioButton -> {
+                    binding.confirmPasswordLayout.visibility = View.GONE
+                    binding.signupButton.visibility = View.GONE
+                    binding.loginButton.visibility = View.VISIBLE
+                    binding.checkboxTerms.visibility = View.GONE
+                }
+            }
         }
     }
 

@@ -12,5 +12,6 @@ class SignupViewModel @Inject constructor(
 
     fun signUp(email: String, password: String) = authRepository.signUp(email, password)
     fun signInWithGoogle(idToken: String) = authRepository.authWithGoogle(idToken)
+    fun login(email: String, password: String) = authRepository.signIn(email, password)
 
 }
