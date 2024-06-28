@@ -1,8 +1,13 @@
 package com.glitchcraftlabs.qrstorage.ui.home
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -77,6 +82,21 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
 
+        val menuHost = requireActivity().findViewById<Toolbar>(R.id.toolbar)
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.main_menu , menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                if(menuItem.itemId == R.id.menu_logout){
+                    viewModel.logout()
+                    findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSignupFragment())
+                }
+                return true
+            }
+
+        })
     }
 
     override fun onResume() {

@@ -45,4 +45,12 @@ class AuthRepository(
             }
         return authWithGoogleLiveData
     }
+
+    fun logout(){
+        firebaseAuth.signOut()
+    }
+
+    fun getCurrentUser(): FirebaseUser? {
+        return firebaseAuth.currentUser
+    }
 }

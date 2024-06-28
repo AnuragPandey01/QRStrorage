@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeFragment_to_generatedQrFragment"
             app:destination="@id/generatedQrFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_signupFragment"
+            app:destination="@id/signupFragment" />
     </fragment>
     <fragment
         android:id="@+id/generatedQrFragment"

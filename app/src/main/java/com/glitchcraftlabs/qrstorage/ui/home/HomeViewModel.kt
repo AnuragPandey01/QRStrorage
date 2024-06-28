@@ -3,6 +3,7 @@ package com.glitchcraftlabs.qrstorage.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.glitchcraftlabs.qrstorage.data.repository.AuthRepository
 import com.glitchcraftlabs.qrstorage.data.repository.Repository
 import com.glitchcraftlabs.qrstorage.util.QueryResult
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: Repository
+    private val repository: Repository,
+    private val authRepository: AuthRepository
 ): ViewModel() {
 
     val history = repository.history
@@ -47,6 +49,10 @@ class HomeViewModel @Inject constructor(
             )
             loadHistory()
         }
+    }
+
+    fun logout() {
+        authRepository.logout()
     }
 
 }

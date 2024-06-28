@@ -74,7 +74,7 @@ class AllScansFragment : Fragment(R.layout.fragment_all_scans), AdapterView.OnIt
         val menuHost = requireActivity().findViewById<Toolbar>(R.id.toolbar)
         menuHost.addMenuProvider(object : MenuProvider{
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.main_menu , menu)
+                menuInflater.inflate(R.menu.history_menu , menu)
                 val searchView = menu.findItem(R.id.menu_search)!!.actionView as SearchView
                 searchView.isSubmitButtonEnabled = true
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{

@@ -30,6 +30,14 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
     private lateinit var googleSignInClient : GoogleSignInClient
     private val RC_SIGN_IN = 123
 
+    override fun onStart() {
+        super.onStart()
+        val currentUser = viewmodel.getCurrentUser()
+        if(currentUser != null){
+            findNavController().navigate(R.id.action_signupFragment_to_homeFragment)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle   ?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSignupBinding.bind(view)
