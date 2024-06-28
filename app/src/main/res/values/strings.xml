@@ -25,4 +25,9 @@
     <string name="no_compatible_app_found">No compatible app found</string>
     <string name="share_via">Share via</string>
     <string name="text_copied_to_clipboard">Text copied to clipboard!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="by_signing_up_you_agree_to_our_terms_privacy_policy"><![CDATA[by signing up you agree to our Terms & Privacy Policy]]></string>
+    <string name="please_accept_terms">please accept terms and conditions\n</string>
+    <string name="web_client">1028817467707-dj5hgj72lbc7cpliski6v5fob78h7079.apps.googleusercontent.com</string>
 </resources>

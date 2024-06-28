@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1028817467707",
+    "project_id": "qr-storage-f7a09",
+    "storage_bucket": "qr-storage-f7a09.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1028817467707:android:7aa476dc95f64bfec45f1e",
+        "android_client_info": {
+          "package_name": "com.glitchcraftlabs.qrstorage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1028817467707-6r5j04tf596n8jvuqro30e0vnut216at.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.glitchcraftlabs.qrstorage",
+            "certificate_hash": "596a41be99d48d4a0aef31e393f3c7998ebe2238"
+          }
+        },
+        {
+          "client_id": "1028817467707-dj5hgj72lbc7cpliski6v5fob78h7079.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKTHMmmvsg1eQVH1tsC9L2OzEDL0I_vNE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1028817467707-dj5hgj72lbc7cpliski6v5fob78h7079.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

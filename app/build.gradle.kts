@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.safeArgs)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -71,5 +72,10 @@ dependencies {
     implementation(libs.play.services.code.scanner)
     implementation("com.google.zxing:core:3.5.3")
     implementation(libs.audience.network.sdk)
+
+    implementation(platform(libs.firebase.bom))
+    //implementation (libs.firebase.ui.auth)
+    implementation(libs.firebase.auth)
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
 
 }

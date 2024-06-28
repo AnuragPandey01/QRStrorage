@@ -1,6 +1,8 @@
 [versions]
 agp = "8.4.0"
 audienceNetworkSdk = "6.17.0"
+firebaseBom = "33.1.1"
+firebaseUiAuth = "7.2.0"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -25,6 +27,9 @@ androidx-room-ktx = { group="androidx.room", name="room-ktx", version.ref = "roo
 androidx-room-compiler = { group="androidx.room", name="room-compiler", version.ref = "roomRuntime" }
 androidx-room-runtime = { group="androidx.room", name="room-runtime", version.ref = "roomRuntime" }
 audience-network-sdk = { module = "com.facebook.android:audience-network-sdk", version.ref = "audienceNetworkSdk" }
+firebase-auth = { module = "com.google.firebase:firebase-auth" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-ui-auth = { module = "com.firebaseui:firebase-ui-auth", version.ref = "firebaseUiAuth" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

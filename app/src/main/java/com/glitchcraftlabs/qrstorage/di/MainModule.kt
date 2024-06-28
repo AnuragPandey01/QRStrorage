@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import com.glitchcraftlabs.qrstorage.data.local.HistoryDao
 import com.glitchcraftlabs.qrstorage.data.local.HistoryDatabase
+import com.glitchcraftlabs.qrstorage.data.repository.AuthRepository
 import com.glitchcraftlabs.qrstorage.data.repository.Repository
+import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,5 +30,16 @@ class MainModule {
     @Provides
     fun provideRepository(historyDao: HistoryDao): Repository {
         return Repository(historyDao)
+    }
+
+    @Provides
+    fun provideFirebaseAuth(): FirebaseAuth {
+        return FirebaseAuth.getInstance()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthRepository(firebaseAuth: FirebaseAuth): AuthRepository {
+        return AuthRepository(firebaseAuth)
     }
 }
