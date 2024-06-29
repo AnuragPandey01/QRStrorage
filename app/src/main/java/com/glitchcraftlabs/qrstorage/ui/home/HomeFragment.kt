@@ -106,7 +106,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 return true
             }
 
-        })
+        },viewLifecycleOwner)
     }
 
     override fun onResume() {
