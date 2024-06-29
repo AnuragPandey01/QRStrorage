@@ -8,6 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.glitchcraftlabs.qrstorage.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -35,11 +36,11 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
         navController = navHostFragment.navController
-        binding.toolbar.setupWithNavController(navController)
+        binding.toolbar.setupWithNavController(navController, AppBarConfiguration(setOf(R.id.homeFragment)))
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when(destination.id){
-                R.id.signupFragment -> {
+                R.id.authFragment -> {
                     binding.toolbar.visibility = View.GONE
                 }
                 else ->{

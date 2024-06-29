@@ -2,6 +2,7 @@ package com.glitchcraftlabs.qrstorage.ui.home
 
 import android.app.ProgressDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -50,7 +51,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
     private val progressDialog by lazy {
         ProgressDialog(requireContext()).apply {
-            setTitle("Uploading file")
+            setTitle("Uploading File")
+            setMessage("Please wait.." )
         }
     }
 
@@ -99,7 +101,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 if(menuItem.itemId == R.id.menu_logout){
                     viewModel.logout()
-                    findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSignupFragment())
+                    findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToAuthFragment())
                 }
                 return true
             }
@@ -185,14 +187,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
 
                 viewModel.viewModelScope.launch {
+                    progressDialog.show()
                     viewModel.uploadFile(tag, viewModel.selectedFileUri!!).observe(viewLifecycleOwner){
                         when(it){
-                            is QueryResult.Loading -> {
-                                progressDialog.show()
-                            }
+                            is QueryResult.Loading -> {}
                             is QueryResult.Success -> {
-                                progressDialog.dismiss()
                                 insertHistory(tag, it.data.toString())
+                                progressDialog.dismiss()
                             }
                             is QueryResult.Error -> {
                                 progressDialog.dismiss()

@@ -10,7 +10,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import com.glitchcraftlabs.qrstorage.R
-import com.glitchcraftlabs.qrstorage.databinding.FragmentSignupBinding
+import com.glitchcraftlabs.qrstorage.databinding.FragmentAuthBinding
 import com.glitchcraftlabs.qrstorage.util.QueryResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -21,9 +21,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class AuthFragment : Fragment(R.layout.fragment_signup) {
+class AuthFragment : Fragment(R.layout.fragment_auth) {
 
-    private var _binding: FragmentSignupBinding? = null
+    private var _binding: FragmentAuthBinding? = null
     private val binding get() = _binding!!
     private val viewmodel by viewModels<AuthViewModel>()
     private val progressDialog by lazy { ProgressDialog(requireContext()).apply { setTitle("Loading..") } }
@@ -34,13 +34,13 @@ class AuthFragment : Fragment(R.layout.fragment_signup) {
         super.onStart()
         val currentUser = viewmodel.getCurrentUser()
         if(currentUser != null){
-            findNavController().navigate(R.id.action_signupFragment_to_homeFragment)
+            findNavController().navigate(R.id.action_authFragment_to_homeFragment)
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle   ?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentSignupBinding.bind(view)
+        _binding = FragmentAuthBinding.bind(view)
 
         val googleSignInOptions  = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.web_client))
@@ -128,7 +128,7 @@ class AuthFragment : Fragment(R.layout.fragment_signup) {
                 is QueryResult.Success -> {
                     progressDialog.dismiss()
                     Snackbar.make(requireView(), "Success", Snackbar.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_signupFragment_to_homeFragment)
+                    findNavController().navigate(R.id.action_authFragment_to_homeFragment)
                 }
                 is QueryResult.Error -> {
                     progressDialog.dismiss()
