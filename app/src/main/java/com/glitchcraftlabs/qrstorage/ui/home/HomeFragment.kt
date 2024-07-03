@@ -126,7 +126,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
             ).show(parentFragmentManager,"ScanResult")
         }
-        viewModel.loadHistory()
+        viewModel.loadHistory(false)
     }
 
     private fun setUpRecyclerView() {
@@ -171,11 +171,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     binding.uploadFileButton.visibility = View.GONE
                     binding.fileStorageInfoTextView.visibility = View.GONE
                     binding.qrTextInputLayout.visibility = View.VISIBLE
+                    viewModel.loadHistory(false)
                 }
                 R.id.fileRadioButton -> {
                     binding.uploadFileButton.visibility = View.VISIBLE
                     binding.fileStorageInfoTextView.visibility = View.VISIBLE
                     binding.qrTextInputLayout.visibility = View.GONE
+                    viewModel.loadHistory(true)
                 }
             }
         }

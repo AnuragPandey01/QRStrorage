@@ -82,10 +82,11 @@ class Repository(
         }
     }
 
-    suspend fun getRecentWithLimit(limit: Int){
+    suspend fun getRecentWithLimit(limit: Int, isFile: Boolean){
         _history.postValue(QueryResult.Loading())
         try{
-            _history.postValue(QueryResult.Success(historyDao.getRecentWithLimit(limit)))
+            if (isFile) _history.postValue(QueryResult.Success(historyDao.getFileRecentWithLimit(limit)))
+            else _history.postValue(QueryResult.Success(historyDao.getTextRecentWithLimit(limit)))
         }catch (e: Exception){
             _history.postValue(QueryResult.Error("Error fetching data"))
         }

@@ -22,8 +22,11 @@ interface HistoryDao {
     @Query("SELECT * FROM History WHERE tag LIKE '%' || :tag || '%'")
     suspend fun getHistoryByTag(tag: String): List<History>
 
-    @Query("SELECT * FROM HISTORY ORDER BY createdAt DESC LIMIT :limit")
-    suspend fun getRecentWithLimit(limit: Int): List<History>
+    @Query("SELECT * FROM HISTORY WHERE NOT isFile ORDER BY createdAt DESC LIMIT :limit")
+    suspend fun getTextRecentWithLimit(limit: Int): List<History>
+
+    @Query("SELECT * FROM HISTORY WHERE isFile ORDER BY createdAt DESC LIMIT :limit")
+    suspend fun getFileRecentWithLimit(limit: Int): List<History>
 
     @Query("UPDATE History SET tag = :newTag WHERE tag = :oldTag")
     suspend fun updateTag(newTag : String, oldTag:String)

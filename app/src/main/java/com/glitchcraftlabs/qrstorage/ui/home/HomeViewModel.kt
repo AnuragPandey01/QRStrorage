@@ -25,12 +25,12 @@ class HomeViewModel @Inject constructor(
         get() = _selectedFileUri
 
     init{
-        loadHistory()
+        loadHistory(false)
     }
 
-    fun loadHistory(){
+    fun loadHistory(file: Boolean){
         viewModelScope.launch {
-            repository.getRecentWithLimit(5)
+            repository.getRecentWithLimit(5, file)
         }
     }
 
@@ -41,7 +41,7 @@ class HomeViewModel @Inject constructor(
             isGenerated = true,
             isFile = isFile
         )
-        loadHistory()
+        loadHistory(isFile)
         return res
     }
 
@@ -53,7 +53,7 @@ class HomeViewModel @Inject constructor(
                 isGenerated = false,
                 isFile = false
             )
-            loadHistory()
+            loadHistory(false)
         }
     }
 
