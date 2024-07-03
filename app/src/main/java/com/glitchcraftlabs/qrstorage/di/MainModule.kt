@@ -7,6 +7,7 @@ import com.glitchcraftlabs.qrstorage.data.local.HistoryDatabase
 import com.glitchcraftlabs.qrstorage.data.repository.AuthRepository
 import com.glitchcraftlabs.qrstorage.data.repository.Repository
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
@@ -47,4 +48,6 @@ class MainModule {
     }
 
     @Provides fun provideStorage() = Firebase.storage
+
+    @Provides fun provideFireStore() = Firebase.firestore
 }

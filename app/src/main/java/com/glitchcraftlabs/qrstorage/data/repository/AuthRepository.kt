@@ -1,5 +1,6 @@
 package com.glitchcraftlabs.qrstorage.data.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.glitchcraftlabs.qrstorage.util.QueryResult
@@ -52,5 +53,26 @@ class AuthRepository(
 
     fun getCurrentUser(): FirebaseUser? {
         return firebaseAuth.currentUser
+    }
+
+    fun getVerificationStatus(): LiveData<QueryResult<Boolean>> {
+        val verificationLiveData = MutableLiveData<QueryResult<Boolean>>(QueryResult.Loading())
+        getCurrentUser()?.reload()?.addOnSuccessListener {
+            verificationLiveData.postValue(QueryResult.Success(getCurrentUser()?.isEmailVerified == true))
+        }?.addOnFailureListener {
+            verificationLiveData.postValue(QueryResult.Error(it.message))
+        } ?: verificationLiveData.postValue(QueryResult.Error("Please check your internet connection and try again."))
+        return verificationLiveData
+    }
+
+    fun sendVerificationEmail(): LiveData<QueryResult<Boolean>> {
+        val verificationLiveData = MutableLiveData<QueryResult<Boolean>>(QueryResult.Loading())
+        getCurrentUser()?.sendEmailVerification()
+            ?.addOnSuccessListener {
+                verificationLiveData.postValue(QueryResult.Success(true))
+            }?.addOnFailureListener {
+                verificationLiveData.postValue(QueryResult.Error(it.message))
+            }
+        return verificationLiveData
     }
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary_blue"
+        android:text="Verify Email"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textAlignment="center"
+        android:layout_marginTop="16dp"
+        android:text="To continue email verification is required, a verification email will bw sent to you email address"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnVerifyEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Verify"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="end"
+        app:cornerRadius="8dp"/>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

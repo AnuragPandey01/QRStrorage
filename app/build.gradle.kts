@@ -75,8 +75,8 @@ dependencies {
     implementation(libs.audience.network.sdk)
 
     implementation(platform(libs.firebase.bom))
-    //implementation (libs.firebase.ui.auth)
     implementation(libs.firebase.auth)
     implementation("com.google.android.gms:play-services-auth:21.2.0")
+    implementation("com.google.firebase:firebase-firestore")
 
 }

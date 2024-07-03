@@ -3,6 +3,7 @@ package com.glitchcraftlabs.qrstorage.ui.home
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -24,6 +25,9 @@ import com.glitchcraftlabs.qrstorage.ui.scan_result.ScanResultBottomSheetFragmen
 import com.glitchcraftlabs.qrstorage.util.Constants.FILE_SIZE_LIMIT
 import com.glitchcraftlabs.qrstorage.util.QueryResult
 import com.glitchcraftlabs.qrstorage.util.getFileMetaInfo
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.dialog.MaterialDialogs
 import com.google.android.material.snackbar.Snackbar
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanner
@@ -185,21 +189,40 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         getString(R.string.please_fill_all_fields), Snackbar.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
+                if(viewModel.getCurrentUser() == null){
+                    findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToAuthFragment())
+                }
 
-                viewModel.viewModelScope.launch {
-                    progressDialog.show()
-                    viewModel.uploadFile(tag, viewModel.selectedFileUri!!).observe(viewLifecycleOwner){
-                        when(it){
-                            is QueryResult.Loading -> {}
-                            is QueryResult.Success -> {
-                                insertHistory(tag, it.data.toString())
-                                progressDialog.dismiss()
+                viewModel.isEmailVerified().observe(viewLifecycleOwner){
+                    when(it){
+                        is QueryResult.Loading -> {}
+                        is QueryResult.Success -> {
+                            if(it.data == false){
+                                showEmailVerificationDialog()
+                                return@observe
+                            }else{
+                                viewModel.viewModelScope.launch {
+                                    progressDialog.show()
+                                    viewModel.uploadFile(tag, viewModel.selectedFileUri!!).observe(viewLifecycleOwner){
+                                        when(it){
+                                            is QueryResult.Loading -> {}
+                                            is QueryResult.Success -> {
+                                                insertHistory(tag, it.data.toString())
+                                                progressDialog.dismiss()
+                                            }
+                                            is QueryResult.Error -> {
+                                                progressDialog.dismiss()
+                                                Snackbar.make(binding.root, it.message ?: "something went wrong", Snackbar.LENGTH_SHORT)
+                                                    .show()
+                                            }
+                                        }
+                                    }
+                                }
                             }
-                            is QueryResult.Error -> {
-                                progressDialog.dismiss()
-                                Snackbar.make(binding.root, it.message ?: "something went wrong", Snackbar.LENGTH_SHORT)
-                                    .show()
-                            }
+                        }
+                        is QueryResult.Error -> {
+                            Snackbar.make(binding.root, it.message ?: "something went wrong", Snackbar.LENGTH_SHORT)
+                                .show()
                         }
                     }
                 }
@@ -266,6 +289,32 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
             }
         }
+    }
+
+    private fun showEmailVerificationDialog(){
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.email_verification_dialog_layout,null)
+        val verifyButton = dialogView.findViewById<MaterialButton>(R.id.btnVerifyEmail)
+
+
+
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        verifyButton.setOnClickListener {
+            dialog.dismiss()
+            viewModel.sendVerificationEmail().observe(viewLifecycleOwner){
+                if(it is QueryResult.Success){
+                    Snackbar.make(binding.root, "Verification email sent", Snackbar.LENGTH_SHORT).show()
+                }
+                if(it is QueryResult.Error){
+                    Snackbar.make(binding.root, it.message ?: "unable to send verification email", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        dialog.show()
     }
 
     override fun onDestroyView() {

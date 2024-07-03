@@ -69,4 +69,10 @@ class HomeViewModel @Inject constructor(
 
     suspend fun uploadFile(tag:String, fileUri: Uri) = repository.uploadFile(tag, fileUri,authRepository.getCurrentUser()!!)
 
+    fun isEmailVerified() = authRepository.getVerificationStatus()
+
+    fun sendVerificationEmail() = authRepository.sendVerificationEmail()
+
+    fun getCurrentUser() = authRepository.getCurrentUser()
+
 }

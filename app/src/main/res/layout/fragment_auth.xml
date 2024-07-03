@@ -210,32 +210,20 @@
         </com.google.android.material.card.MaterialCardView>
 
 
-        <!--<View
+        <View
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
 
         <TextView
+            android:id="@+id/continueAsGuestButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:layout_marginBottom="8dp"
-            android:text="Already have an account?"/>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/loginButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:strokeColor="@color/primary_blue">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:textAlignment="center"
-                android:textColor="@color/primary_blue"
-                android:layout_margin="16dp"
-                android:text="Login"/>
-        </com.google.android.material.card.MaterialCardView>-->
+            android:gravity="center"
+            android:textColor="@color/primary_blue"
+            android:text="continue as guest?"/>
 
     </LinearLayout>
 
