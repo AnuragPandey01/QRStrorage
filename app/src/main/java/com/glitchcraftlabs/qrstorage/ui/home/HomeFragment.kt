@@ -107,6 +107,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     viewModel.logout()
                     findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToAuthFragment())
                 }
+                if(menuItem.itemId == R.id.menu_setting){
+                    findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSettingFragment())
+                }
                 return true
             }
 
