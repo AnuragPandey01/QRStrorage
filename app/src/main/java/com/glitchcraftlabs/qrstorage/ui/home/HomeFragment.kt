@@ -207,7 +207,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                         when(it){
                                             is QueryResult.Loading -> {}
                                             is QueryResult.Success -> {
-                                                insertHistory(tag, it.data.toString())
+                                                insertHistory(tag, it.data.toString(), true)
                                                 progressDialog.dismiss()
                                             }
                                             is QueryResult.Error -> {
@@ -232,7 +232,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         getString(R.string.please_fill_all_fields), Snackbar.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
-                insertHistory(tag, binding.qrTextInput.text.toString())
+                insertHistory(tag, binding.qrTextInput.text.toString(),false)
             }
 
         }
@@ -267,11 +267,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun insertHistory(tag:String, value: String){
+    private fun insertHistory(tag:String, value: String, isFile: Boolean){
         lifecycleScope.launch {
             viewModel.insertGeneratedQR(
                 tag = tag,
-                value = value
+                value = value,
+                isFile = isFile
             ).observe(viewLifecycleOwner){
                 if(it is QueryResult.Error){
                     binding.tagInput.error = it.message

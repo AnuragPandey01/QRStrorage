@@ -1,13 +1,11 @@
 package com.glitchcraftlabs.qrstorage.data.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.glitchcraftlabs.qrstorage.util.QueryResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-
 
 class AuthRepository(
     private val firebaseAuth: FirebaseAuth

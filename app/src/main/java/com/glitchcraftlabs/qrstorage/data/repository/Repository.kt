@@ -27,7 +27,8 @@ class Repository(
     suspend fun insertHistory(
         tag: String,
         value : String,
-        isGenerated: Boolean
+        isGenerated: Boolean,
+        isFile: Boolean
     ): LiveData<QueryResult<Nothing?>>  {
         val insertLiveData = MutableLiveData<QueryResult<Nothing?>>(QueryResult.Loading())
         try{
@@ -36,7 +37,8 @@ class Repository(
                     tag = tag,
                     data = value,
                     isGenerated = isGenerated,
-                    createdAt = System.currentTimeMillis()
+                    createdAt = System.currentTimeMillis(),
+                    isFile = isFile
                 )
             ).also {
                 insertLiveData.postValue(QueryResult.Success(null))

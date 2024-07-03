@@ -12,5 +12,7 @@ data class History(
 
     val data: String,
 
-    val isGenerated: Boolean
+    val isGenerated: Boolean,
+
+    val isFile: Boolean
 )

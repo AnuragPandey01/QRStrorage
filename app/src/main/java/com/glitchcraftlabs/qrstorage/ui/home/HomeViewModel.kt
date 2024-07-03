@@ -34,11 +34,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    suspend fun insertGeneratedQR(tag: String, value: String): LiveData<QueryResult<Nothing?>> {
+    suspend fun insertGeneratedQR(tag: String, value: String, isFile: Boolean): LiveData<QueryResult<Nothing?>> {
         val res = repository.insertHistory(
             tag = tag,
             value = value,
-            isGenerated = true
+            isGenerated = true,
+            isFile = isFile
         )
         loadHistory()
         return res
@@ -49,7 +50,8 @@ class HomeViewModel @Inject constructor(
             repository.insertHistory(
                 value = qrResult.rawValue.orEmpty(),
                 tag = UUID.randomUUID().toString(),
-                isGenerated = false
+                isGenerated = false,
+                isFile = false
             )
             loadHistory()
         }
