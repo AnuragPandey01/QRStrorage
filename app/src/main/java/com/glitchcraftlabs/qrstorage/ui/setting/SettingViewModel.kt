@@ -13,13 +13,16 @@ class SettingViewModel @Inject constructor(
     var userEmail : String? = authRepository.getCurrentUser()?.email
 
     fun getProvider() : String {
-        val providerId = authRepository.getCurrentUser()?.providerData?.get(1)?.providerId
+        val currUser = authRepository.getCurrentUser()!!
+        val providerId = currUser.providerData[0]?.providerId
         return if(providerId == GoogleAuthProvider.PROVIDER_ID){
             "Google"
         }else{
             "Email"
         }
     }
+
+    fun isAnonymous() = authRepository.getCurrentUser()!!.isAnonymous
 
     fun sendVerificationEmail() = authRepository.sendVerificationEmail()
 

@@ -91,7 +91,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
                 is QueryResult.Error -> {
                     binding.progressIndicator.visibility = View.GONE
-                    Log.d("gogo", "onViewCreated: ${it.message}")
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -195,7 +194,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         getString(R.string.please_fill_all_fields), Snackbar.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
-                if(viewModel.getCurrentUser() == null){
+                if(viewModel.getCurrentUser()!!.isAnonymous){
+                    progressDialog.dismiss()
                     findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToAuthFragment())
                 }
 

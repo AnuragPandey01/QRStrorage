@@ -73,4 +73,15 @@ class AuthRepository(
             }
         return verificationLiveData
     }
+
+    fun signInAnonymously(): LiveData<QueryResult<FirebaseUser>> {
+        val signInAnonymouslyLiveData = MutableLiveData<QueryResult<FirebaseUser>>(QueryResult.Loading())
+        firebaseAuth.signInAnonymously()
+            .addOnSuccessListener {
+                signInAnonymouslyLiveData.postValue(QueryResult.Success(it.user!!))
+            }.addOnFailureListener {
+                signInAnonymouslyLiveData.postValue(QueryResult.Error(it.message))
+            }
+        return signInAnonymouslyLiveData
+    }
 }

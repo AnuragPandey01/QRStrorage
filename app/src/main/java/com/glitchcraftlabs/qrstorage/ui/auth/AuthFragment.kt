@@ -105,7 +105,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         }
 
         binding.continueAsGuestButton.setOnClickListener {
-            findNavController().navigate(R.id.action_authFragment_to_homeFragment)
+            observeAuthState(viewmodel.signInAnonymously())
         }
     }
 

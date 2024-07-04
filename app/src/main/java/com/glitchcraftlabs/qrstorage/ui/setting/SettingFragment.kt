@@ -39,7 +39,10 @@ class SettingFragment : Fragment(R.layout.fragment_setting) {
 
         binding.apply {
             email.setText(viewModel.userEmail)
-            if(viewModel.getProvider() == "Google"){
+            if(viewModel.isAnonymous()){
+                binding.email.text = "Anonymous"
+            }
+            else if(viewModel.getProvider() == "Google"){
                 btnEmailProvider.setImageDrawable(ResourcesCompat.getDrawable(resources,R.drawable.ic_google, null))
             }else{
                 viewModel.isEmailVerified().observe(viewLifecycleOwner){

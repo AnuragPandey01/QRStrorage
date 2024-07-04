@@ -17,7 +17,7 @@ import kotlinx.coroutines.tasks.await
 class Repository(
     private val firebaseStorage: FirebaseStorage,
     private val auth: FirebaseAuth,
-    private val firestore: FirebaseFirestore,
+    private val firestore: FirebaseFirestore
 ) {
 
     private val storageRef = firebaseStorage.reference
@@ -88,7 +88,12 @@ class Repository(
         try {
             _history.postValue(
                 QueryResult.Success(
-                    getUserNotesCollection().whereEqualTo("tag", tag).get().await()
+                    getUserNotesCollection()
+                        .orderBy("tag")
+                        .startAt(tag)
+                        .endAt(tag + "\uf8ff")
+                        .get()
+                        .await()
                         .toObjects(History::class.java)
                 )
             )
@@ -100,11 +105,13 @@ class Repository(
     suspend fun getRecentWithLimit(limit: Int, isFile: Boolean) {
         _history.postValue(QueryResult.Loading())
         try {
-            _history.postValue(QueryResult.Success(
-                getUserNotesCollection().whereEqualTo("file", isFile)
-                    .orderBy("createdAt", Query.Direction.DESCENDING)
-                    .limit(limit.toLong()).get().await().toObjects(History::class.java)
-            ) )
+            _history.postValue(
+                QueryResult.Success(
+                    getUserNotesCollection().whereEqualTo("file", isFile)
+                        .orderBy("createdAt", Query.Direction.DESCENDING)
+                        .limit(limit.toLong()).get().await().toObjects(History::class.java)
+                )
+            )
         } catch (e: Exception) {
             _history.postValue(QueryResult.Error(e.message))
         }

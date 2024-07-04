@@ -18,4 +18,6 @@ class AuthViewModel @Inject constructor(
 
     fun getCurrentUser() = authRepository.getCurrentUser()
 
+    fun signInAnonymously() = authRepository.signInAnonymously()
+
 }
