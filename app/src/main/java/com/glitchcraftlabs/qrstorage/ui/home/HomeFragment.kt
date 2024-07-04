@@ -55,7 +55,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
     private val progressDialog by lazy {
         ProgressDialog(requireContext()).apply {
-            setTitle("Uploading File")
+            setTitle("Generating QR Code")
             setMessage("Please wait.." )
         }
     }
@@ -91,6 +91,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
                 is QueryResult.Error -> {
                     binding.progressIndicator.visibility = View.GONE
+                    Log.d("gogo", "onViewCreated: ${it.message}")
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -141,8 +142,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         recentScanAdapter.setOnItemClick {
             findNavController().navigate(
                 HomeFragmentDirections.actionHomeFragmentToGeneratedQrFragment(
-                    tag = it.tag,
-                    qrData = it.data
+                    tag = it.tag!!,
+                    qrData = it.data!!
                 )
             )
         }
@@ -198,22 +199,23 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToAuthFragment())
                 }
 
-                viewModel.isEmailVerified().observe(viewLifecycleOwner){
+                viewModel.isEmailVerified().observe(viewLifecycleOwner) {
                     when(it){
-                        is QueryResult.Loading -> {}
+                        is QueryResult.Loading -> {
+                            progressDialog.show()
+                        }
                         is QueryResult.Success -> {
                             if(it.data == false){
+                                progressDialog.dismiss()
                                 showEmailVerificationDialog()
                                 return@observe
                             }else{
                                 viewModel.viewModelScope.launch {
-                                    progressDialog.show()
                                     viewModel.uploadFile(tag, viewModel.selectedFileUri!!).observe(viewLifecycleOwner){
                                         when(it){
                                             is QueryResult.Loading -> {}
                                             is QueryResult.Success -> {
                                                 insertHistory(tag, it.data.toString(), true)
-                                                progressDialog.dismiss()
                                             }
                                             is QueryResult.Error -> {
                                                 progressDialog.dismiss()
@@ -226,6 +228,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                             }
                         }
                         is QueryResult.Error -> {
+                            progressDialog.dismiss()
                             Snackbar.make(binding.root, it.message ?: "something went wrong", Snackbar.LENGTH_SHORT)
                                 .show()
                         }
@@ -273,6 +276,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun insertHistory(tag:String, value: String, isFile: Boolean){
+        progressDialog.show()
         lifecycleScope.launch {
             viewModel.insertGeneratedQR(
                 tag = tag,
@@ -280,10 +284,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 isFile = isFile
             ).observe(viewLifecycleOwner){
                 if(it is QueryResult.Error){
+                    progressDialog.dismiss()
                     binding.tagInput.error = it.message
                 }
 
                 if(it is QueryResult.Success){
+                    progressDialog.dismiss()
                     findNavController().navigate(
                         HomeFragmentDirections.actionHomeFragmentToGeneratedQrFragment(
                             tag = tag,

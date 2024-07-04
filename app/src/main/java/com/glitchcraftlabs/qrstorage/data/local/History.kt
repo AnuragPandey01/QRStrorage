@@ -1,18 +1,14 @@
 package com.glitchcraftlabs.qrstorage.data.local
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity()
 data class History(
-    @PrimaryKey
-    val tag: String,
 
-    val createdAt: Long,
+    var tag: String? = null,
 
-    val data: String,
+    var createdAt: Long? = null,
 
-    val isGenerated: Boolean,
+    var data: String? = null,
 
-    val isFile: Boolean
+    var isGenerated: Boolean? = null,
+
+    var isFile: Boolean? = null
 )

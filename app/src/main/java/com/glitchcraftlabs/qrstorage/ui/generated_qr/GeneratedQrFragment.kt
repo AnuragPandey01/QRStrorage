@@ -1,6 +1,7 @@
 package com.glitchcraftlabs.qrstorage.ui.generated_qr
 
 import android.Manifest
+import android.app.ProgressDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -37,6 +38,12 @@ class GeneratedQrFragment : Fragment(R.layout.fragment_generated_qr) {
     private var _binding: FragmentGeneratedQrBinding? = null
     private val binding: FragmentGeneratedQrBinding get() = _binding!!
     private val args by navArgs<GeneratedQrFragmentArgs>()
+    private val progressDialog by lazy {
+        ProgressDialog(requireContext()).apply {
+            setMessage("Please wait...")
+            setTitle("Updating")
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -77,13 +84,16 @@ class GeneratedQrFragment : Fragment(R.layout.fragment_generated_qr) {
                 dialog.dismiss()
             }
             dialogView.findViewById<MaterialButton>(R.id.save_edit_button).setOnClickListener {
+                progressDialog.show()
                 val newTag = tagInput.text.toString()
                 if (newTag.isNotBlank()) {
                     lifecycleScope.launch {
                         viewModel.updateHistory(binding.qrTag.text.toString(), newTag).observe(viewLifecycleOwner){
                             if(it is QueryResult.Error){
+                                progressDialog.dismiss()
                                 tagInput.error = it.message
                             }else if(it is QueryResult.Success){
+                                progressDialog.dismiss()
                                 binding.qrTag.text = newTag
                                 dialog.dismiss()
                             }

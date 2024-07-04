@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide.init
 import com.glitchcraftlabs.qrstorage.R
 import com.glitchcraftlabs.qrstorage.data.repository.Repository
+import com.google.firebase.firestore.Query
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,16 +19,16 @@ class AllScansViewModel @Inject constructor(
     var checkedRadioButtonId = R.id.radio_recently_added
 
     init {
-        viewModelScope.launch{ repository.getAllHistory() }
+        viewModelScope.launch{ repository.getAllHistory(Query.Direction.ASCENDING) }
     }
 
     fun sortByNew() {
-        viewModelScope.launch{ repository.getAllHistory() }
+        viewModelScope.launch{ repository.getAllHistory(Query.Direction.ASCENDING) }
         checkedRadioButtonId = R.id.radio_recently_added
     }
 
     fun sortByOld() {
-        viewModelScope.launch{ repository.getAllHistory(false) }
+        viewModelScope.launch{ repository.getAllHistory(Query.Direction.DESCENDING) }
         checkedRadioButtonId = R.id.radio_oldest_first
     }
 

@@ -57,10 +57,10 @@ class ScanHistoryAdapter(
             val current = scanHistoryList[realPosition]
             holder.binding.apply {
                 tvTag.text = current.tag
-                tvHistoryType.text = if(current.isGenerated) "generated" else "scanned"
-                val date = simpleDateTimeFormatter.format(Date(current.createdAt))
+                tvHistoryType.text = if(current.isGenerated!!) "generated" else "scanned"
+                val date = simpleDateTimeFormatter.format(Date(current.createdAt!!))
                 tvDate.text = date
-                qrType.text = if(current.isFile) "File" else "Text"
+                qrType.text = if(current.isFile!!) "File" else "Text"
                 root.setOnClickListener {
                     onItemClick(current)
                 }

@@ -129,8 +129,8 @@ class AllScansFragment : Fragment(R.layout.fragment_all_scans), AdapterView.OnIt
         historyAdapter.setOnItemClick {
             findNavController().navigate(
                 AllScansFragmentDirections.actionAllScansFragmentToGeneratedQrFragment(
-                    tag = it.tag,
-                    qrData = it.data
+                    tag = it.tag!!,
+                    qrData = it.data!!
                 )
             )
         }
